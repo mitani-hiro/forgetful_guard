@@ -1,0 +1,2 @@
+sqlboiler:
+	sqlboiler mysql
