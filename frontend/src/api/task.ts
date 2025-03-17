@@ -8,11 +8,11 @@ export interface Task {
 }
 
 export const getTasks = async () => {
-  const response = await apiClient.get<Task[]>(`/tasks`);
+  const response = await apiClient.get<Task[]>(`/api/tasks`);
   return response.data;
 };
 
 export const getTaskById = async (taskID: number): Promise<Task> => {
-  const response = await apiClient.get<Task>(`/task/${taskID}`);
+  const response = await apiClient.get<Task>(`/api/task/${taskID}`);
   return response.data;
 };

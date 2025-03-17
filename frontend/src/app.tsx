@@ -1,20 +1,26 @@
 import React from "react";
 import { registerRootComponent } from "expo";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./screens/HomeScreen";
 import TaskListScreen from "./screens/task/TaskListScreen";
+import GeofenceCreateScreen from "./screens/geofence/GeofenceCreateScreen";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Home: undefined;
+  TaskList: undefined;
+  GeofenceCreate: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="TaskList"
-          component={TaskListScreen}
-          options={{ title: "タスク一覧" }}
-        />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="TaskList" component={TaskListScreen} />
+        <Stack.Screen name="GeofenceCreate" component={GeofenceCreateScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

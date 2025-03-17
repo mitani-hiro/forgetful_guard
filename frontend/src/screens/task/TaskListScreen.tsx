@@ -6,10 +6,14 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
 import axios from "axios";
+import { RootStackParamList } from "../../App";
 import { useTaskStore } from "../../store/task";
 
-const TaskListScreen = () => {
+type Props = StackScreenProps<RootStackParamList, "TaskList">;
+
+const TaskListScreen = ({ navigation }: Props) => {
   const { tasks, fetchTasks } = useTaskStore();
   const [loading, setLoading] = useState(true);
 

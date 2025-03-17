@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func setTaskRouter(r *gin.Engine) {
+func setTaskRouter(r *gin.RouterGroup) {
 	// タスク一覧
 	r.GET("/tasks", handler.GetTasks)
 	// タスク取得

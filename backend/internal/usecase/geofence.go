@@ -91,7 +91,6 @@ func putGeofence(ctx context.Context, geofence *domain.Geofence) error {
 		}
 	}
 
-	fmt.Printf("Geofence ResultMetadata: %+v\n", res.ResultMetadata)
 	fmt.Printf("Geofence Successes: %+v\n", res.Successes)
 	return nil
 }

@@ -26,10 +26,12 @@ func NewRouter() *gin.Engine {
 		c.JSON(http.StatusOK, gin.H{"message": "health check OK"})
 	})
 
-	setTaskRouter(r)
+	rg := r.Group("/api")
+
+	setTaskRouter(rg)
 
 	//r.POST("/geofence/check", handler.CheckGeofence)
-	r.POST("/geofence", handler.CreateGeofence)
+	rg.POST("/geofence", handler.CreateGeofence)
 
 	return r
 }
