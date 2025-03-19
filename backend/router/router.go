@@ -30,7 +30,7 @@ func NewRouter() *gin.Engine {
 
 	setTaskRouter(rg)
 
-	//r.POST("/geofence/check", handler.CheckGeofence)
+	rg.POST("/tracker", handler.SendTracker)
 	rg.POST("/geofence", handler.CreateGeofence)
 
 	return r

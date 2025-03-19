@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MapboxGL from "@rnmapbox/maps";
 import { View, Button } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
+import Geolocation from "react-native-geolocation-service";
 import { RootStackParamList } from "../../App";
 import { useGeofenceStore } from "../../store/geofence";
+import { useTrackerStore } from "../../store/tracker";
 
 type Props = StackScreenProps<RootStackParamList, "GeofenceCreate">;
 
@@ -12,6 +14,13 @@ MapboxGL.setAccessToken("YOUR_MAPBOX_ACCESS_TOKEN");
 const GeofenceCreateScreen = ({ navigation }: Props) => {
   const { polygonCoordinates, addPoint, resetPolygon, registerGeofence } =
     useGeofenceStore();
+
+  const { sendTracker } = useTrackerStore();
+
+  useEffect(() => {
+    const stopTracking = startTracking();
+    return () => stopTracking(); // コンポーネントがアンマウントされたら停止
+  }, []);
 
   const handleMapPress = async (event: any) => {
     const coords = event.geometry.coordinates;
@@ -25,12 +34,40 @@ const GeofenceCreateScreen = ({ navigation }: Props) => {
     addPoint([coords[0], coords[1]]);
   };
 
+  const startTracking = () => {
+    const interval = setInterval(sendCurrentPosition, 5000);
+    return () => clearInterval(interval);
+  };
+
+  const sendCurrentPosition = async () => {
+    const position = await getCurrentPosition();
+    sendTracker([position.longitude, position.latitude]);
+  };
+
+  const getCurrentPosition = () => {
+    return new Promise<{ latitude: number; longitude: number }>(
+      (resolve, reject) => {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (error) => reject(error),
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+      }
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <MapboxGL.MapView style={{ flex: 1 }} onPress={handleMapPress}>
         <MapboxGL.Camera
           zoomLevel={14}
-          centerCoordinate={[139.6917, 35.6895]}
+          //centerCoordinate={[139.6917, 35.6895]}
+          followUserLocation
         />
 
         <MapboxGL.UserLocation />
