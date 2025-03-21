@@ -1,6 +1,9 @@
 import { apiClient } from "./client";
 
-export const createGeofence = async (polygon: [number, number][][]) => {
+export const createGeofence = async (
+  polygon: [number, number][][],
+  token: string | null
+) => {
   console.log("polygon: ", polygon);
 
   const response = await apiClient.post(
@@ -9,6 +12,7 @@ export const createGeofence = async (polygon: [number, number][][]) => {
       title: "hoge title",
       userId: 999,
       polygon: polygon,
+      deviceToken: token,
     })
   );
 

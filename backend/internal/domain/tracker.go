@@ -5,8 +5,8 @@ import (
 )
 
 type Tracker struct {
-	DeviceID string
-	Position []float64
+	DeviceToken string
+	Position    []float64
 }
 
 // ValidateTracker トラッカーのバリデーション.
@@ -15,8 +15,8 @@ func ValidateTracker(tracker *Tracker) error {
 		return errors.New("tracker is nil")
 	}
 
-	if tracker.DeviceID == "" {
-		return errors.New("tracker deviceID is empty")
+	if tracker.DeviceToken == "" {
+		return errors.New("tracker DeviceToken is empty")
 	}
 
 	if len(tracker.Position) != 2 {

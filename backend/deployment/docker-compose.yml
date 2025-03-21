@@ -32,3 +32,26 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local-example
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath . -optimizeDbBeforeStartup
+    volumes:
+      - dynamodb:/var/lib/dynamodblocal
+    ports:
+      - 8000:8000
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    tty: true
+    ports:
+      - "8001:8001"
+    depends_on:
+      - dynamodb
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb-local-example:8000
+volumes:
+  dynamodb:
+    driver: local
+  bin:
+    driver: local

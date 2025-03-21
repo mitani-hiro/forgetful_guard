@@ -19,8 +19,8 @@ import (
 // SendTracker
 func SendTracker(ctx context.Context, req *oapi.TrackerRequest) error {
 	tracker := &domain.Tracker{
-		DeviceID: req.DeviceID,
-		Position: req.Position,
+		DeviceToken: req.DeviceToken,
+		Position:    req.Position,
 	}
 
 	if err := domain.ValidateTracker(tracker); err != nil {
@@ -53,7 +53,7 @@ func sendTracker(ctx context.Context, tracker *domain.Tracker) error {
 		TrackerName: aws.String("ForgetfulGuardTracker"),
 		Updates: []types.DevicePositionUpdate{
 			{
-				DeviceId:   aws.String(tracker.DeviceID),
+				DeviceId:   aws.String(tracker.DeviceToken),
 				Position:   tracker.Position,
 				SampleTime: aws.Time(time.Now()),
 			},

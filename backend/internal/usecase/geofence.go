@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"forgetful-guard/common/caws"
 	"forgetful-guard/common/rdb"
 	"forgetful-guard/internal/domain"
 	"forgetful-guard/internal/domain/models"
@@ -17,6 +18,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/location"
 	"github.com/aws/aws-sdk-go-v2/service/location/types"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/pkg/errors"
 )
 
@@ -45,8 +47,33 @@ func CreateGeofence(ctx context.Context, req *oapi.GeofenceRequest) error {
 			return err
 		}
 
+		if err := putDeviceToken(task.UserID, req.DeviceToken); err != nil {
+			return err
+		}
+
 		return nil
 	})
+}
+
+// putDeviceToken デバイス情報登録.
+func putDeviceToken(userID uint64, token string) error {
+	input := &dynamodb.PutItemInput{
+		TableName: aws.String("device_tokens"),
+		Item: map[string]*dynamodb.AttributeValue{
+			"user_id": {
+				N: aws.String(strconv.FormatUint(userID, 10)),
+			},
+			"device_token": {
+				S: aws.String(token),
+			},
+		},
+	}
+
+	if _, err := caws.DynamoDBClient.PutItem(input); err != nil {
+		return errors.Wrap(err, "dynamoDB put error")
+	}
+
+	return nil
 }
 
 // putGeofence ジオフェンス登録.

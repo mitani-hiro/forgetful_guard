@@ -12,10 +12,12 @@ type Props = StackScreenProps<RootStackParamList, "GeofenceCreate">;
 MapboxGL.setAccessToken("YOUR_MAPBOX_ACCESS_TOKEN");
 
 const GeofenceCreateScreen = ({ navigation }: Props) => {
-  const { polygonCoordinates, addPoint, resetPolygon, registerGeofence } =
+  const { polygonCoordinates, addPoint, resetPolygon, createGeofence } =
     useGeofenceStore();
 
   const { sendTracker } = useTrackerStore();
+
+  const testDeviceToken = "test-device-token";
 
   useEffect(() => {
     const stopTracking = startTracking();
@@ -41,7 +43,7 @@ const GeofenceCreateScreen = ({ navigation }: Props) => {
 
   const sendCurrentPosition = async () => {
     const position = await getCurrentPosition();
-    sendTracker([position.longitude, position.latitude]);
+    sendTracker(testDeviceToken, [position.longitude, position.latitude]);
   };
 
   const getCurrentPosition = () => {
@@ -61,9 +63,16 @@ const GeofenceCreateScreen = ({ navigation }: Props) => {
     );
   };
 
+  const registerGeofence = async () => {
+    createGeofence("test-device-token");
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <MapboxGL.MapView style={{ flex: 1 }} onPress={handleMapPress}>
+      <MapboxGL.MapView
+        style={{ width: "100%", height: "100%" }}
+        onPress={handleMapPress}
+      >
         <MapboxGL.Camera
           zoomLevel={14}
           //centerCoordinate={[139.6917, 35.6895]}
