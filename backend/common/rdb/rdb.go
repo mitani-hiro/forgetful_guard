@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
@@ -18,18 +17,13 @@ var DB *sql.DB
 // InitDB DB初期化.
 // TODO 接続情報は別で管理.
 func InitDB() error {
-
-	if _, err := time.LoadLocation("Asia/Tokyo"); err != nil {
-		return errors.Wrap(err, "failed to load timezone Asia/Tokyo")
-	}
-
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	dbname := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Asia%%2FTokyo", user, password, host, port, dbname)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local", user, password, host, port, dbname)
 	fmt.Printf("dsn: %#v\n", dsn)
 
 	db, err := sql.Open("mysql", dsn)
