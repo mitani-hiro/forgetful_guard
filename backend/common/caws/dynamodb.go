@@ -1,7 +1,6 @@
 package caws
 
 import (
-	"log"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -15,14 +14,21 @@ var DynamoDBClient *dynamodb.DynamoDB
 
 // DynamoDB クライアントを初期化して返す
 func NewDynamoDBClient() error {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(os.Getenv("AWS_REGION")),
-		Endpoint:    aws.String("http://dynamodb-local-example:8000"),
-		Credentials: credentials.NewStaticCredentials(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET_ACCESS_KEY"), ""),
-	})
+	awsConfig := &aws.Config{
+		Region: aws.String(os.Getenv("AWS_REGION")),
+	}
 
+	if endpoint := os.Getenv("DYNAMODB_ENDPOINT"); endpoint != "" {
+		awsConfig.Endpoint = aws.String(endpoint)
+		awsConfig.Credentials = credentials.NewStaticCredentials(
+			os.Getenv("AWS_ACCESS_KEY"),
+			os.Getenv("AWS_SECRET_ACCESS_KEY"),
+			"",
+		)
+	}
+
+	sess, err := session.NewSession(awsConfig)
 	if err != nil {
-		log.Fatalf("failed to create session: %v", err)
 		return errors.Wrap(err, "session.NewSession error")
 	}
 
