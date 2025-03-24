@@ -7,6 +7,8 @@ import (
 	"log"
 	"os"
 
+	_ "time/tzdata"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 	"github.com/volatiletech/sqlboiler/boil"
@@ -23,7 +25,7 @@ func InitDB() error {
 	port := os.Getenv("DB_PORT")
 	dbname := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local", user, password, host, port, dbname)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&Asia%%2FTokyo", user, password, host, port, dbname)
 	fmt.Printf("dsn: %#v\n", dsn)
 
 	db, err := sql.Open("mysql", dsn)
