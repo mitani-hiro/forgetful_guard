@@ -78,13 +78,16 @@ func putDeviceToken(userID uint64, token string) error {
 
 // putGeofence ジオフェンス登録.
 func putGeofence(ctx context.Context, geofence *domain.Geofence) error {
-	cfg, err := config.LoadDefaultConfig(
-		ctx,
+	optFns := []func(*config.LoadOptions) error{
 		config.WithRegion(os.Getenv("AWS_REGION")),
-		config.WithCredentialsProvider(
-			credentials.NewStaticCredentialsProvider(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET_ACCESS_KEY"), "")),
-	)
+	}
 
+	if os.Getenv("APP_ENV") == "local" {
+		optFns = append(optFns, config.WithCredentialsProvider(
+			credentials.NewStaticCredentialsProvider(os.Getenv("AWS_ACCESS_KEY"), os.Getenv("AWS_SECRET_ACCESS_KEY"), "")))
+	}
+
+	cfg, err := config.LoadDefaultConfig(ctx, optFns...)
 	if err != nil {
 		return errors.Wrap(err, "config.LoadDefaultConfig error")
 	}

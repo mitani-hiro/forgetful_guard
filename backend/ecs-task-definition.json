@@ -43,6 +43,10 @@
                 {
                     "name": "DB_NAME",
                     "value": "forgetful"
+                },
+                {
+                    "name": "APP_ENV",
+                    "value": "dev"
                 }
             ],
             "mountPoints": [],
