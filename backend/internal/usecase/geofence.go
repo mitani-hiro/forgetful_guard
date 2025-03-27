@@ -3,13 +3,12 @@ package usecase
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"forgetful-guard/common/caws"
+	"forgetful-guard/common/logger"
 	"forgetful-guard/common/rdb"
 	"forgetful-guard/internal/domain"
 	"forgetful-guard/internal/domain/models"
 	"forgetful-guard/internal/interface/oapi"
-	"log"
 	"os"
 	"strconv"
 
@@ -23,7 +22,7 @@ import (
 )
 
 // CreateGeofence
-func CreateGeofence(ctx context.Context, req *oapi.GeofenceRequest) error {
+func CreateGeofence(ctx context.Context, req *oapi.Geofence) error {
 	return rdb.Tx(ctx, func(tx *sql.Tx) error {
 		task := &models.Task{
 			Title:  req.Title,
@@ -117,11 +116,11 @@ func putGeofence(ctx context.Context, geofence *domain.Geofence) error {
 
 	if len(res.Errors) > 0 {
 		for _, e := range res.Errors {
-			log.Printf("エラー: GeofenceId=%s, メッセージ=%s", *e.GeofenceId, *e.Error.Message)
+			logger.Info("response errors", "geofenceID", *e.GeofenceId, "message", *e.Error.Message)
 		}
 	}
 
-	fmt.Printf("Geofence Successes: %+v\n", res.Successes)
+	logger.Info("Geofence Successes", "successes", res.Successes)
 	return nil
 }
 

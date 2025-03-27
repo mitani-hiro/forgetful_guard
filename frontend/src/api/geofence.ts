@@ -1,4 +1,5 @@
 import { apiClient } from "./client";
+import { components } from "./openapi.gen";
 
 export const createGeofence = async (
   polygon: [number, number][][],
@@ -6,15 +7,12 @@ export const createGeofence = async (
 ) => {
   console.log("polygon: ", polygon);
 
-  const response = await apiClient.post(
-    "api/geofence",
-    JSON.stringify({
-      title: "hoge title",
-      userId: 999,
-      polygon: polygon,
-      deviceToken: token,
-    })
-  );
+  const geofence: components["schemas"]["Geofence"] = {
+    title: "hoge title",
+    userID: 999,
+    polygon: polygon,
+    deviceToken: token || "",
+  };
 
-  console.log("api response: ", response);
+  const response = await apiClient.post("/api/geofence", geofence);
 };

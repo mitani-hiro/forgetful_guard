@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"fmt"
+	"forgetful-guard/common/logger"
 	"forgetful-guard/internal/domain"
 	"forgetful-guard/internal/interface/oapi"
 	"os"
@@ -17,7 +17,7 @@ import (
 )
 
 // SendTracker
-func SendTracker(ctx context.Context, req *oapi.TrackerRequest) error {
+func SendTracker(ctx context.Context, req *oapi.Tracker) error {
 	tracker := &domain.Tracker{
 		DeviceToken: req.DeviceToken,
 		Position:    req.Position,
@@ -66,6 +66,6 @@ func sendTracker(ctx context.Context, tracker *domain.Tracker) error {
 		return errors.Wrap(err, "BatchUpdateDevicePosition error")
 	}
 
-	fmt.Printf("sendTracker チェック完了: %+v\n", res.Errors)
+	logger.Info("Tracker Successes", "errors", res.Errors)
 	return nil
 }

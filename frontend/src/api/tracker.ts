@@ -1,4 +1,5 @@
 import { apiClient } from "./client";
+import { components } from "./openapi.gen";
 
 export const sendTracker = async (
   deviceToken: string,
@@ -7,8 +8,10 @@ export const sendTracker = async (
   console.log("sendTracker deviceToken: ", deviceToken);
   console.log("sendTracker position: ", position);
 
-  const response = await apiClient.post("api/tracker", {
+  const tracker: components["schemas"]["Tracker"] = {
     deviceToken: deviceToken,
     position: position,
-  });
+  };
+
+  const response = await apiClient.post("/api/tracker", tracker);
 };

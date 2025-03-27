@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"forgetful-guard/internal/domain/models"
 
 	"github.com/pkg/errors"
@@ -18,7 +17,6 @@ func NewTaskRepository() *TaskRepositoryImpl {
 }
 
 func (r *TaskRepositoryImpl) Get() ([]*models.Task, error) {
-	fmt.Println("repository Get")
 	t := []*models.Task{
 		{
 			ID:          1,
@@ -37,7 +35,6 @@ func (r *TaskRepositoryImpl) Get() ([]*models.Task, error) {
 }
 
 func (r *TaskRepositoryImpl) GetByID(id uint64) (*models.Task, error) {
-	fmt.Println("repository GetByID")
 	t := &models.Task{
 		ID:          id,
 		Title:       "hoge title",
@@ -49,8 +46,6 @@ func (r *TaskRepositoryImpl) GetByID(id uint64) (*models.Task, error) {
 
 // Create タスク登録.
 func (r *TaskRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, task *models.Task) error {
-	fmt.Println("repository Create")
-
 	if err := task.Insert(ctx, tx, boil.Infer()); err != nil {
 		return errors.Wrap(err, "task insert error")
 	}
@@ -59,11 +54,9 @@ func (r *TaskRepositoryImpl) Create(ctx context.Context, tx *sql.Tx, task *model
 }
 
 func (r *TaskRepositoryImpl) Update(task *models.Task) error {
-	fmt.Println("repository Update")
 	return nil
 }
 
 func (r *TaskRepositoryImpl) Delete(id uint64) error {
-	fmt.Println("repository Delete")
 	return nil
 }

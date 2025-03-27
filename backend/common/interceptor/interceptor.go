@@ -1,7 +1,7 @@
 package interceptor
 
 import (
-	"log"
+	"forgetful-guard/common/logger"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ func Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				log.Printf("Recovered from panic: %v", err)
+				logger.Error("Recovered from panic", err)
 
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "内部サーバーエラーが発生しました"})
 

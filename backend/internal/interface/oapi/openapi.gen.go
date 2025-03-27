@@ -11,21 +11,51 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
+// Geofence defines model for Geofence.
+type Geofence struct {
+	DeviceToken string        `json:"deviceToken"`
+	Polygon     [][][]float64 `json:"polygon"`
+	Title       string        `json:"title"`
+	UserID      uint64        `json:"userID"`
+}
+
 // Task defines model for Task.
 type Task struct {
-	Completed bool   `json:"completed"`
-	Id        uint64 `json:"id"`
-	Title     string `json:"title"`
+	Completed   bool    `json:"completed"`
+	Description *string `json:"description,omitempty"`
+	Id          uint64  `json:"id"`
+	Title       string  `json:"title"`
 }
+
+// Tracker defines model for Tracker.
+type Tracker struct {
+	DeviceToken string    `json:"deviceToken"`
+	Position    []float64 `json:"position"`
+}
+
+// PostGeofenceJSONRequestBody defines body for PostGeofence for application/json ContentType.
+type PostGeofenceJSONRequestBody = Geofence
+
+// PostTrackerJSONRequestBody defines body for PostTracker for application/json ContentType.
+type PostTrackerJSONRequestBody = Tracker
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+	// ジオフェンス登録
+	// (POST /geofence)
+	PostGeofence(c *gin.Context)
+	// ヘルスチェック
+	// (GET /healthcheck)
+	GetHealthcheck(c *gin.Context)
+	// タスク詳細取得
+	// (GET /task/{id})
+	GetTask(c *gin.Context, id string)
 	// タスク一覧取得
 	// (GET /tasks)
 	GetTasks(c *gin.Context)
-	// タスク詳細取得
-	// (GET /tasks/{id})
-	GetTask(c *gin.Context, id string)
+	// トラッカー送信
+	// (POST /tracker)
+	PostTracker(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -37,8 +67,8 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(c *gin.Context)
 
-// GetTasks operation middleware
-func (siw *ServerInterfaceWrapper) GetTasks(c *gin.Context) {
+// PostGeofence operation middleware
+func (siw *ServerInterfaceWrapper) PostGeofence(c *gin.Context) {
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
@@ -47,7 +77,20 @@ func (siw *ServerInterfaceWrapper) GetTasks(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetTasks(c)
+	siw.Handler.PostGeofence(c)
+}
+
+// GetHealthcheck operation middleware
+func (siw *ServerInterfaceWrapper) GetHealthcheck(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetHealthcheck(c)
 }
 
 // GetTask operation middleware
@@ -72,6 +115,32 @@ func (siw *ServerInterfaceWrapper) GetTask(c *gin.Context) {
 	}
 
 	siw.Handler.GetTask(c, id)
+}
+
+// GetTasks operation middleware
+func (siw *ServerInterfaceWrapper) GetTasks(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetTasks(c)
+}
+
+// PostTracker operation middleware
+func (siw *ServerInterfaceWrapper) PostTracker(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PostTracker(c)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -101,6 +170,9 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
+	router.POST(options.BaseURL+"/geofence", wrapper.PostGeofence)
+	router.GET(options.BaseURL+"/healthcheck", wrapper.GetHealthcheck)
+	router.GET(options.BaseURL+"/task/:id", wrapper.GetTask)
 	router.GET(options.BaseURL+"/tasks", wrapper.GetTasks)
-	router.GET(options.BaseURL+"/tasks/:id", wrapper.GetTask)
+	router.POST(options.BaseURL+"/tracker", wrapper.PostTracker)
 }

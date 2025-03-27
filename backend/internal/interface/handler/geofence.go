@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"forgetful-guard/common/logger"
 	"forgetful-guard/internal/interface/oapi"
 	"forgetful-guard/internal/usecase"
 	"net/http"
@@ -9,22 +9,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateGeofence ジオフェンス登録.
-func CreateGeofence(c *gin.Context) {
+// PostGeofence ジオフェンス登録.
+func (h *TaskHandler) PostGeofence(c *gin.Context) {
 	// TODO 認証処理
 
-	var req *oapi.GeofenceRequest
+	var req *oapi.Geofence
 	if err := c.ShouldBindJSON(&req); err != nil {
-		fmt.Printf("c.ShouldBindJSON error: %v\n", err)
+		logger.Error("c.ShouldBindJSON error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "c.ShouldBindJSON error"})
 		return
 	}
 
 	if err := usecase.CreateGeofence(c, req); err != nil {
-		fmt.Printf("usecase.CreateGeofence error: %v\n", err)
+		logger.Error("usecase.CreateGeofence error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "usecase.CreateGeofence error"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusCreated, gin.H{})
 }

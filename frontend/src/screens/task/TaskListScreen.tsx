@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import axios from "axios";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../app";
 import { useTaskStore } from "../../store/task";
 
 type Props = StackScreenProps<RootStackParamList, "TaskList">;

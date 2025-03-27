@@ -1,8 +1,21 @@
 package handler
 
 import (
+	"forgetful-guard/internal/interface/oapi"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
+
+type TaskHandler struct{}
+
+func NewTaskHandler() oapi.ServerInterface {
+	return &TaskHandler{}
+}
+
+func (h *TaskHandler) GetHealthcheck(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{})
+}
 
 func Interceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {

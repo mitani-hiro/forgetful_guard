@@ -2,6 +2,7 @@ package router
 
 import (
 	"forgetful-guard/internal/interface/handler"
+	"forgetful-guard/internal/interface/oapi"
 	"net/http"
 	"time"
 
@@ -22,16 +23,10 @@ func NewRouter() *gin.Engine {
 
 	r.Use(handler.Interceptor())
 
-	r.GET("/healthcheck", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "health check OK"})
+	h := handler.NewTaskHandler()
+	oapi.RegisterHandlersWithOptions(r, h, oapi.GinServerOptions{
+		BaseURL: "/api",
 	})
-
-	rg := r.Group("/api")
-
-	setTaskRouter(rg)
-
-	rg.POST("/tracker", handler.SendTracker)
-	rg.POST("/geofence", handler.CreateGeofence)
 
 	return r
 }

@@ -3,7 +3,7 @@ import MapboxGL from "@rnmapbox/maps";
 import { View, Button } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import Geolocation from "react-native-geolocation-service";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../app";
 import { useGeofenceStore } from "../../store/geofence";
 import { useTrackerStore } from "../../store/tracker";
 

@@ -1,11 +1,7 @@
 import { apiClient } from "./client";
+import { components } from "./openapi.gen";
 
-export interface Task {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-}
+type Task = components["schemas"]["Task"];
 
 export const getTasks = async () => {
   const response = await apiClient.get<Task[]>(`/api/tasks`);

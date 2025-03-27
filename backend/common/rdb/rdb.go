@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
+	"forgetful-guard/common/logger"
 	"os"
 
 	_ "time/tzdata"
@@ -26,7 +26,6 @@ func InitDB() error {
 	dbname := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&Asia%%2FTokyo", user, password, host, port, dbname)
-	fmt.Printf("dsn: %#v\n", dsn)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -37,7 +36,7 @@ func InitDB() error {
 		return errors.Wrap(err, "db.Ping error")
 	}
 
-	log.Println("DB接続成功")
+	logger.Info("DB connection successful")
 	DB = db
 	boil.SetDB(DB)
 	return nil

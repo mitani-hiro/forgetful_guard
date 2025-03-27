@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"forgetful-guard/common/logger"
 	"forgetful-guard/internal/interface/oapi"
 	"forgetful-guard/internal/usecase"
 	"net/http"
@@ -9,23 +9,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SendTracker(c *gin.Context) {
+// PostTracker トラッカー送信.
+func (h *TaskHandler) PostTracker(c *gin.Context) {
 	// TODO 認証処理
 
-	var req *oapi.TrackerRequest
+	var req *oapi.Tracker
 	if err := c.ShouldBindJSON(&req); err != nil {
-		fmt.Printf("c.ShouldBindJSON error: %v\n", err)
+		logger.Error("c.ShouldBindJSON error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "c.ShouldBindJSON error"})
 		return
 	}
 
-	fmt.Printf("SendTracker req: %+v\n", *req)
-
 	if err := usecase.SendTracker(c, req); err != nil {
-		fmt.Printf("usecase.SendTracker error: %v\n", err)
+		logger.Error("usecase.SendTracker error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "usecase.SendTracker error"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	c.JSON(http.StatusCreated, gin.H{})
 }

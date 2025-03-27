@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"log"
+	"forgetful-guard/common/logger"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -18,15 +18,13 @@ type GeofenceEvent struct {
 
 func handler(ctx context.Context, event events.EventBridgeEvent) {
 	var geofenceEvent GeofenceEvent
-	err := json.Unmarshal(event.Detail, &geofenceEvent)
-	if err != nil {
-		log.Printf("JSONパースエラー: %v", err)
+	if err := json.Unmarshal(event.Detail, &geofenceEvent); err != nil {
+		logger.Error("json.Unmarshal error", err)
 		return
 	}
 
 	// Geofence イベントの処理
-	log.Printf("デバイス %s が %s に %s\n", geofenceEvent.DeviceId, geofenceEvent.GeofenceId, geofenceEvent.EventType)
-	log.Printf("Timestamp: %s\n", geofenceEvent.Timestamp)
+	logger.Info("tracker event received", "deviceID", geofenceEvent.DeviceId, "geofenceID", geofenceEvent.GeofenceId, "eventType", geofenceEvent.EventType, "timestamp", geofenceEvent.Timestamp)
 }
 
 func main() {
