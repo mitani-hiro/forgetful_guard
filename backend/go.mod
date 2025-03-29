@@ -3,6 +3,7 @@ module forgetful-guard
 go 1.24.0
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.4.1
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/aws-sdk-go v1.55.6
 	github.com/aws/aws-sdk-go-v2/config v1.29.9
@@ -12,6 +13,7 @@ require (
 	github.com/gin-contrib/cors v1.7.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-sql-driver/mysql v1.9.0
+	github.com/golang/mock v1.6.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/volatiletech/null/v8 v8.1.2

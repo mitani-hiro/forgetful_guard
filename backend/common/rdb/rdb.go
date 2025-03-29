@@ -48,9 +48,9 @@ func GetDBConnection() *sql.DB {
 
 // Tx トランザクション処理.
 func Tx(ctx context.Context, fn func(tx *sql.Tx) error) error {
-	tx, err := DB.BeginTx(ctx, nil)
+	tx, err := DB.Begin()
 	if err != nil {
-		return errors.Wrap(err, "DB.BeginTx error")
+		return errors.Wrap(err, "DB.Begin error")
 	}
 
 	if err := fn(tx); err != nil {

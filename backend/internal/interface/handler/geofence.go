@@ -3,6 +3,7 @@ package handler
 import (
 	"forgetful-guard/common/logger"
 	"forgetful-guard/internal/interface/oapi"
+	"forgetful-guard/internal/interface/repository"
 	"forgetful-guard/internal/usecase"
 	"net/http"
 
@@ -20,7 +21,8 @@ func (h *TaskHandler) PostGeofence(c *gin.Context) {
 		return
 	}
 
-	if err := usecase.CreateGeofence(c, req); err != nil {
+	u := usecase.NewUsecase(&usecase.Usecase{}, &repository.Repository{})
+	if err := u.UsecaseService.CreateGeofence(c, req); err != nil {
 		logger.Error("usecase.CreateGeofence error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "usecase.CreateGeofence error"})
 		return

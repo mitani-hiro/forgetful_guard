@@ -24,6 +24,11 @@ func main() {
 		return
 	}
 
+	if err := caws.NewLocationClient(); err != nil {
+		logger.Error("Location Service client initialization error", err)
+		return
+	}
+
 	r := router.NewRouter()
 
 	r.Use(interceptor.Recovery())
