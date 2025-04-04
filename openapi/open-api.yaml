@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: Task API
+  version: 1.0.0
+paths:
+  /healthcheck:
+    get:
+      summary: ヘルスチェック
+      operationId: getHealthcheck
+      responses:
+        "200":
+          description: ヘルスチェック
+
+  /tasks:
+    get:
+      summary: タスク一覧取得
+      operationId: getTasks
+      responses:
+        "200":
+          description: タスク一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+
+  /task/{id}:
+    get:
+      summary: タスク詳細取得
+      operationId: getTask
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: タスク詳細
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /geofence:
+    post:
+      summary: ジオフェンス登録
+      operationId: postGeofence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Geofence"
+      responses:
+        "201":
+          description: レスポンス
+
+  /tracker:
+    post:
+      summary: トラッカー送信
+      operationId: postTracker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tracker"
+      responses:
+        "201":
+          description: レスポンス
+
+components:
+  schemas:
+    Task:
+      $ref: "components/schemas/task.yaml#/Task"
+    Geofence:
+      $ref: "components/schemas/geofence.yaml#/Geofence"
+    Tracker:
+      $ref: "components/schemas/tracker.yaml#/Tracker"

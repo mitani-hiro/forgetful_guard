@@ -1,0 +1,25 @@
+FROM golang:1.24-alpine as builder
+
+WORKDIR /app
+
+COPY ../go.mod ../go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /ecs cmd/ecs/main.go
+
+FROM alpine:latest
+
+WORKDIR /root/
+
+RUN apk --no-cache add ca-certificates tzdata \
+	&& cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+	&& echo "Asia/Tokyo" > /etc/timezone \
+	&& apk del tzdata
+
+COPY --from=builder /ecs .
+
+EXPOSE 8080
+
+CMD ["./ecs"]

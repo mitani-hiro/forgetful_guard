@@ -1,0 +1,13 @@
+Tracker:
+  type: object
+  required:
+    - deviceToken
+    - position
+  properties:
+    deviceToken:
+      type: string
+    position:
+      type: array
+      items:
+        type: number
+        format: double

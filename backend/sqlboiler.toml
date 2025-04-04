@@ -1,0 +1,10 @@
+output = "./internal/domain/models"
+no-tests = true
+
+[mysql]
+  dbname = "forgetful"
+  user = "root"
+  pass = "root"
+  host = "localhost"
+  port = 3306
+  sslmode = "false"

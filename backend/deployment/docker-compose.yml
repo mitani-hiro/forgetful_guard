@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  ecs:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.ecs.local
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../:/app
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+  lambda:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile.lambda.local
+    environment:
+      - AWS_REGION=ap-northeast-1
+    command: ["main"]
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: forgetful
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local-example
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath . -optimizeDbBeforeStartup
+    volumes:
+      - dynamodb:/var/lib/dynamodblocal
+    ports:
+      - 8000:8000
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    tty: true
+    ports:
+      - "8001:8001"
+    depends_on:
+      - dynamodb
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb-local-example:8000
+volumes:
+  dynamodb:
+    driver: local
+  bin:
+    driver: local

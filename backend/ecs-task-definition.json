@@ -1,0 +1,119 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-1:421156463971:task-definition/forgetful-guard-task:6",
+    "containerDefinitions": [
+        {
+            "name": "forgetful-guard-container",
+            "image": "public.ecr.aws/h7f0r1p2/forgetful-guard:799127881464bf02c5637379b1c11dee748d4318",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "forgetful-guard-container-8080-tcp",
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "TZ",
+                    "value": "Asia/Tokyo"
+                },
+                {
+                    "name": "AWS_REGION",
+                    "value": "ap-northeast-1"
+                },
+                {
+                    "name": "DB_HOST",
+                    "value": "forgetful-guard-db-instance.c1quyqsg0rtd.ap-northeast-1.rds.amazonaws.com"
+                },
+                {
+                    "name": "DB_PORT",
+                    "value": "3306"
+                },
+                {
+                    "name": "DB_USER",
+                    "value": "forgetful"
+                },
+                {
+                    "name": "DB_PASSWORD",
+                    "value": "8s8qZWhCkrjfdJVEo83R"
+                },
+                {
+                    "name": "DB_NAME",
+                    "value": "forgetful"
+                },
+                {
+                    "name": "APP_ENV",
+                    "value": "dev"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/forgetful-guard-task",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "forgetful-guard-task",
+    "taskRoleArn": "arn:aws:iam::421156463971:role/ForgetfulGuardEcsTaskRole",
+    "executionRoleArn": "arn:aws:iam::421156463971:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 6,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "ARM64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2025-03-10T02:01:51.468Z",
+    "registeredBy": "arn:aws:sts::421156463971:assumed-role/forgetful-guard-oidc-deloy-role/GitHubActions",
+    "enableFaultInjection": false,
+    "tags": []
+}
